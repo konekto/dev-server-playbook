@@ -1,0 +1,55 @@
+---
+- name: Install dependencies
+  apt: name={{item}} state=present
+  become: yes
+  with_items:
+   - curl
+   - openssh-server
+   - ca-certificates
+
+- name: Install gitlab package server
+  shell: curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash
+  become: yes
+
+- name: Install gitlab package
+  apt: name=gitlab-ce state=present
+  become: yes
+
+- name: Create gitlab.rb config on remote machine
+  template:
+    src: tasks/install-gitlab/templates/gitlab.rb
+    dest: /etc/gitlab/gitlab.rb
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+  register: gitlab_config
+
+- name: Configure and start gitlab
+  shell: gitlab-ctl reconfigure
+  become: yes
+  when: gitlab_config.changed
+
+- name: Generate ssl cert with certbot
+  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ gitlab_domain }}
+  become: yes
+  when: enable_letsencrypt
+
+- name: Copy new nginx conf from template
+  become: yes
+  template: src=tasks/install-gitlab/templates/gitlab.conf dest=/etc/nginx/sites-available/gitlab.conf
+  notify:
+    - restart nginx
+
+- name: Create link of nginx conf
+  become: yes
+  file: src=/etc/nginx/sites-available/gitlab.conf dest=/etc/nginx/sites-enabled/gitlab.conf state=link
+  notify:
+    - restart nginx
+
+- name: Add www-data user to gitlab-www group
+  user:
+    append: yes
+    groups: gitlab-www
+    name: www-data
+  ignore_errors: yes

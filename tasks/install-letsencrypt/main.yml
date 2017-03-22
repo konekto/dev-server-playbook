@@ -1,0 +1,5 @@
+---
+
+- name: install let's encrypt package
+  apt: name=letsencrypt state=present
+  become: yes

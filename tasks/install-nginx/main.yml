@@ -1,0 +1,9 @@
+---
+
+- name: install nginx
+  apt: name=nginx state=present
+  become: yes
+
+- name: Create custom default index.html
+  template: dest=/var/www/html/index.html src=tasks/install-nginx/templates/index.html group=www-data
+  become: yes

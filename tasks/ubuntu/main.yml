@@ -1,0 +1,12 @@
+---
+- name: update ubuntu
+  become: yes
+  apt: upgrade=dist update_cache=yes
+
+- name: install needed core packages
+  become: yes
+  apt: name={{ item }} state=present
+  with_items:
+    - curl
+    - git
+    - vim

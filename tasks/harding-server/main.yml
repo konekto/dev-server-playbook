@@ -1,0 +1,17 @@
+# run some harding command for linux server
+---
+- name: Set sshd port to a non-standard port
+  become: yes
+  lineinfile:
+    regexp: '^Port'
+    line: "Port {{ sshd_port }}"
+    dest: /etc/ssh/sshd_config
+
+- name: Disable ssh root login
+  become: yes
+  lineinfile:
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin no'
+    dest: /etc/ssh/sshd_config
+  notify:
+    - restart sshd

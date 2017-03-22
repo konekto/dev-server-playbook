@@ -1,0 +1,48 @@
+version: '2'
+services:
+  db:
+    image: mysql
+    container_name: {{redmine_name}}-redmine-database
+    environment:
+      - MYSQL_ROOT_PASSWORD=845ysjdfhsdf83has
+      - MYSQL_DATABASE=redmine
+    volumes:
+      - /var/redmine-{{ redmine_name }}/database:/var/lib/mysql
+  redmine1:
+    image: {{ redmine_image }}
+    container_name: {{ redmine_name }}-redmine-one
+    depends_on:
+      - db
+    links:
+      - db:mysql
+    environment:
+      - REDMINE_SECRET_KEY_BASE=34324234343443dsfsdfsdf2423
+      - REDMINE_DB_MYSQL=mysql
+      - REDMINE_DB_USERNAME=root
+      - REDMINE_DB_PASSWORD=845ysjdfhsdf83has
+      - REDMINE_DB_DATABASE=redmine
+    ports:
+      - "7500:3000"
+    volumes:
+      - /var/redmine-{{ redmine_name }}/files:/usr/src/redmine/files
+      - /var/redmine-{{ redmine_name }}/themes:/usr/src/redmine/public/themes
+      - /var/redmine-{{ redmine_name }}/plugins:/usr/src/redmine/plugins
+  redmine2:
+    image: {{ redmine_image }}
+    container_name: {{ redmine_name }}-redmine-two
+    depends_on:
+      - db
+    links:
+      - db:mysql
+    environment:
+      - REDMINE_SECRET_KEY_BASE=34324234343443dsfsdfsdf2423
+      - REDMINE_DB_MYSQL=mysql
+      - REDMINE_DB_USERNAME=root
+      - REDMINE_DB_PASSWORD=845ysjdfhsdf83has
+      - REDMINE_DB_DATABASE=redmine
+    ports:
+      - "7501:3000"
+    volumes:
+      - /var/redmine-{{ redmine_name }}/files:/usr/src/redmine/files
+      - /var/redmine-{{ redmine_name }}/themes:/usr/src/redmine/public/themes
+      - /var/redmine-{{ redmine_name }}/plugins:/usr/src/redmine/plugins

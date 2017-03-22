@@ -1,0 +1,12 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Ansible template
+*.retry
+group_vars
+hosts
+
+# vagrant
+.vagrant
+*.log
+
+# phpstorm
+.idea

@@ -1,0 +1,60 @@
+---
+- name: install apt key for docker
+  become: yes
+  apt_key: url=https://download.docker.com/linux/ubuntu/gpg state=present
+
+- name: create docker deb file from template
+  become: yes
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+    state: present
+
+- name: install pip
+  become: yes
+  apt: name=python-pip state=present update_cache=yes
+
+- name: install pip packages
+  become: yes
+  pip: name={{ item }} state=present executable=pip2
+  with_items:
+    - docker
+    - docker-compose
+
+- name: install predocker packages
+  become: yes
+  apt: name={{item}} state=present
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - software-properties-common
+    - python-yaml
+
+- name: install docker
+  become: yes
+  apt: name=docker-ce state=present update_cache=yes
+
+- name: add group docker
+  become: yes
+  group: name=docker state=present
+
+- name: add docker group to ubuntu user
+  become: yes
+  user: name={{ansible_env.USER}} append=yes groups=docker
+
+- name: enable docker
+  become: yes
+  service: name=docker enabled=yes
+
+- name: Install docker compose
+  become: yes
+  shell: curl -L https://github.com/docker/compose/releases/download/1.11.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+
+- file: path=/usr/local/bin/docker-compose mode="u=rwx,go=rx"
+  become: yes
+
+- name: start docker
+  become: yes
+  service: name=docker state=started
+
+
+

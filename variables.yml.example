@@ -1,0 +1,30 @@
+---
+#letsencrypt
+letsencrypt_email: we@konek.to
+enable_letsencrypt: false
+
+#sshd
+sshd_port: 99
+
+# gitlab
+gitlab_domain: gitlab.example.com
+gitlab_smtp_enabled: true
+gitlab_smtp_address: mail.test.de
+gitlab_smtp_port: 25
+gitlab_smtp_user_name: test
+gitlab_smtp_password: test
+gitlab_smtp_domain: test.de
+gitlab_smtp_authentication: plain
+gitlab_smtp_enable_starttls_auto: false
+gitlab_smtp_tls: false
+
+#sandstorm
+sandstorm_port: 7777
+sandstorm_hostname: sandstorm.example.com
+sandstorm_wildcard_host: "*.sandstorm.example.com"
+sandstorm_dev_accounts: yes
+
+#redmine
+redmine_domain: redmine.example.to
+redmine_name: konekto
+redmine_image: "redmine:3.2.3-passenger"

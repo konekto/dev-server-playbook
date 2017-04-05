@@ -4,7 +4,7 @@ services:
     image: mysql
     container_name: {{redmine_name}}-redmine-database
     environment:
-      - MYSQL_ROOT_PASSWORD=845ysjdfhsdf83has
+      - MYSQL_ROOT_PASSWORD={{redmine_database_root_password}}
       - MYSQL_DATABASE=redmine
     volumes:
       - /var/redmine-{{ redmine_name }}/database:/var/lib/mysql
@@ -19,7 +19,7 @@ services:
       - REDMINE_SECRET_KEY_BASE=34324234343443dsfsdfsdf2423
       - REDMINE_DB_MYSQL=mysql
       - REDMINE_DB_USERNAME=root
-      - REDMINE_DB_PASSWORD=845ysjdfhsdf83has
+      - REDMINE_DB_PASSWORD={{redmine_database_root_password}}
       - REDMINE_DB_DATABASE=redmine
     ports:
       - "7500:3000"
@@ -38,7 +38,7 @@ services:
       - REDMINE_SECRET_KEY_BASE=34324234343443dsfsdfsdf2423
       - REDMINE_DB_MYSQL=mysql
       - REDMINE_DB_USERNAME=root
-      - REDMINE_DB_PASSWORD=845ysjdfhsdf83has
+      - REDMINE_DB_PASSWORD={{redmine_database_root_password}}
       - REDMINE_DB_DATABASE=redmine
     ports:
       - "7501:3000"

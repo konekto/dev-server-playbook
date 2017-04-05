@@ -6,23 +6,23 @@
 
     # install requirments for the services...
 
-#    - include: tasks/harding-server/main.yml
-#
-#    - include: tasks/ubuntu/main.yml
-#
-#    - include: tasks/install-docker/main.yml
-#
-#    - include: tasks/install-letsencrypt/main.yml
-#
-#    - include: tasks/install-nginx/main.yml
-#
-#    # install services from here ...
-#
-#    - include: tasks/install-gitlab/main.yml
+    - include: tasks/harding-server/main.yml
+
+    - include: tasks/ubuntu/main.yml
+
+    - include: tasks/install-docker/main.yml
+
+    - include: tasks/install-letsencrypt/main.yml
+
+    - include: tasks/install-nginx/main.yml
+
+    # install services from here ...
+
+    - include: tasks/install-gitlab/main.yml
 
     - include: tasks/install-redmine/main.yml
 
-#    - include: tasks/install-sandstorm/main.yml
+    - include: tasks/install-sandstorm/main.yml
 
   # finishing installation tasks...
 

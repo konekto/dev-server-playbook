@@ -1,0 +1,15 @@
+---
+
+- name: Create backup folder
+  become: yes
+  file: dest=/var/backups state=directory
+
+- name: Create backup script from template
+  become: yes
+  template:
+    src: tasks/install-backup-script/templates/backup.sh
+    dest: /opt
+    mode: "u=rwx,go=rx"
+
+#- name: Install cron
+#  become: yes

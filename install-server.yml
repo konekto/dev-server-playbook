@@ -1,28 +1,28 @@
 # a complete playbook to install a new server
 ---
 - name: Provision a Ubuntu 16.04 LTS Server
-  hosts: live
+  hosts: vagrant
   tasks:
 
     # install requirments for the services...
 
-    - include: tasks/harding-server/main.yml
+#    - include: tasks/harding-server/main.yml
 
-    - include: tasks/ubuntu/main.yml
+#    - include: tasks/ubuntu/main.yml
 
-    - include: tasks/install-docker/main.yml
+#    - include: tasks/install-docker/main.yml
 
-    - include: tasks/install-letsencrypt/main.yml
+    - include: tasks/install-openldap-docker/main.yml
 
-    - include: tasks/install-nginx/main.yml
+#    - include: tasks/install-letsencrypt/main.yml
+
+#    - include: tasks/install-nginx/main.yml
 
     # install services from here ...
 
-    - include: tasks/install-gitlab/main.yml
+#    - include: tasks/install-gitlab/main.yml
 
-    - include: tasks/install-redmine/main.yml
-
-    - include: tasks/install-sandstorm/main.yml
+#    - include: tasks/install-redmine/main.yml
 
   # finishing installation tasks...
 

@@ -1,0 +1,30 @@
+version: '2'
+services:
+  openldap:
+    image: osixia/openldap:1.1.8
+    container_name: {{ansible_hostname}}-openldap
+    hostname: {{openldap_hostname}}
+    environment:
+      LDAP_ORGANISATION: "{{openldap_organisation}}"
+      LDAP_DOMAIN: "{{openldap_domain}}"
+      LDAP_ADMIN_PASSWORD: "{{openldap_admin_password}}"
+      LDAP_CONFIG_PASSWORD: "{{openldap_config_password}}"
+      LDAP_BASE_DN: "{{openldap_base_dn}}"
+    volumes:
+      - /var/openldap/database:/var/lib/ldap
+      - /var/openldap/config:/etc/ldap/slapd.d
+      - /container/service/slapd/assets/certs/
+  openldap_admin:
+    image: osixia/phpldapadmin
+    container_name: {{ansible_hostname}}-openldap-admin
+    hostname: {{openldap_admin_hostname}}
+    depends_on:
+      - openldap
+    links:
+      - openldap:ldap-host
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: ldap-host
+      PHPLDAPADMIN_SERVER_ADMIN: "{{openldap_admin_server_admin}}"
+    ports:
+      - "{{openldap_admin_hostport}}:80"
+      - "{{openldap_admin_sslhostport}}:443"

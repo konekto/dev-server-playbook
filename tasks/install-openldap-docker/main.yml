@@ -1,0 +1,17 @@
+---
+
+- name: Create folder for OpenLDAP configuration and database
+  become: yes
+  file: path={{ item }} state=directory owner=www-data group=www-data
+  with_items:
+    - "/var/openldap"
+    - "/var/openldap/database"
+    - "/var/openldap/config"
+
+- name: Create docker compose file from template
+  become: yes
+  template: src=tasks/install-openldap-docker/templates/docker-compose.yml dest=/var/openldap/docker-compose.yml owner={{ansible_env.USER}}
+
+- name: Start docker OpenLDAP and PHPLDAPADMIN
+  shell: docker-compose up -d chdir=/var/openldap creates=/tmp/started-openldap-docker-compose
+

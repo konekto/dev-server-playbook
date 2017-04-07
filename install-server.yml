@@ -8,9 +8,9 @@
 
 #    - include: tasks/harding-server/main.yml
 
-#    - include: tasks/ubuntu/main.yml
+    - include: tasks/ubuntu/main.yml
 
-#    - include: tasks/install-docker/main.yml
+    - include: tasks/install-docker/main.yml
 
     - include: tasks/install-openldap-docker/main.yml
 

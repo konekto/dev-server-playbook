@@ -8,17 +8,19 @@
 
 #    - include: tasks/harding-server/main.yml
 
-    - include: tasks/ubuntu/main.yml
+#    - include: tasks/ubuntu/main.yml
 
-    - include: tasks/install-docker/main.yml
-
-    - include: tasks/install-openldap-docker/main.yml
+#    - include: tasks/install-docker/main.yml
 
 #    - include: tasks/install-letsencrypt/main.yml
+
 
 #    - include: tasks/install-nginx/main.yml
 
     # install services from here ...
+#    - include: tasks/install-rocketchat/main.yml
+
+    - include: tasks/install-openldap-docker/main.yml
 
 #    - include: tasks/install-gitlab/main.yml
 

@@ -10,3 +10,4 @@
     - curl
     - git
     - vim
+    - openssl

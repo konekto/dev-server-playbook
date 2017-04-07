@@ -1,0 +1,41 @@
+---
+- name: Adds chat host to hosts file
+  become: yes
+  lineinfile:
+    dest: /etc/hosts
+    line: "127.0.0.1  {{rocketchat_domain}} chat"
+
+- name: test cert
+  become: yes
+  shell: "openssl req -subj \"/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=chat.local.dev\" -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/letsencrypt/{{ rocketchat_domain }}/certificate.key -out /etc/letsencrypt/{{ rocketchat_domain }}/certificate.crt"
+
+- name: Create folder for Rocket.Chat docker volumes
+  become: yes
+  file:
+    state: directory
+    recurse: yes
+    dest: "{{ item }}"
+  with_items:
+    - /var/rocket.chat/data/runtime/db
+    - /var/rocket.chat/data/dump
+
+- name: Create docker compose file from template
+  become: yes
+  template: src=tasks/install-rocketchat/templates/docker-compose.yml.j2 dest=/var/rocket.chat/docker-compose.yml owner={{ansible_env.USER}}
+
+- name: Copy new nginx conf from template
+  become: yes
+  template: src=tasks/install-rocketchat/templates/nginx.conf.j2 dest=/etc/nginx/sites-available/rocketchat.conf
+  notify:
+    - restart nginx
+
+- name: Create link of nginx conf
+  become: yes
+  file: src=/etc/nginx/sites-available/rocketchat.conf dest=/etc/nginx/sites-enabled/rocketchat.conf state=link
+  notify:
+    - restart nginx
+
+- name: Start docker Rocket.Chat
+  shell: docker-compose up -d chdir=/var/rocket.chat creates=/tmp/started-rocketchat-docker-compose
+
+

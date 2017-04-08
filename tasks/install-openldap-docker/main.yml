@@ -8,6 +8,23 @@
     - "/var/openldap/database"
     - "/var/openldap/config"
 
+- name: Create new ssl certificate
+  become: yes
+  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ radicale_domain }}
+  when: enable_letsencrypt
+
+- name: Create OpenLDAP admin nginx conf from template
+  become: yes
+  template: src=tasks/install-openldap-docker/templates/ldapadmin.conf dest=/etc/nginx/sites-available/ldapadmin.conf
+  notify:
+    - restart nginx
+
+- name: Create link of nginx conf
+  become: yes
+  file: src=/etc/nginx/sites-available/ldapadmin.conf dest=/etc/nginx/sites-enabled/ldapadmin.conf state=link
+  notify:
+    - restart nginx
+
 - name: Create docker compose file from template
   become: yes
   template: src=tasks/install-openldap-docker/templates/docker-compose.yml dest=/var/openldap/docker-compose.yml owner={{ansible_env.USER}}

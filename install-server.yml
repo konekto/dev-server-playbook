@@ -18,9 +18,11 @@
 #    - include: tasks/install-nginx/main.yml
 
     # install services from here ...
+    - include: tasks/install-radicale/main.yml
+
 #    - include: tasks/install-rocketchat/main.yml
 
-    - include: tasks/install-openldap-docker/main.yml
+#    - include: tasks/install-openldap-docker/main.yml
 
 #    - include: tasks/install-gitlab/main.yml
 

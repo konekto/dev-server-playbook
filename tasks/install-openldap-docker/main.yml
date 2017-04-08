@@ -1,5 +1,5 @@
 ---
-
+#todo: nginx conf for admin ldap
 - name: Create folder for OpenLDAP configuration and database
   become: yes
   file: path={{ item }} state=directory owner=www-data group=www-data

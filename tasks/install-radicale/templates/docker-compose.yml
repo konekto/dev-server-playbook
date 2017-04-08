@@ -1,0 +1,10 @@
+---
+version: '2'
+services:
+  radicale:
+    build: "{{radicale_path}}"
+    container_name: {{ansible_host}}-radicale
+    ports:
+      - "{{radicale_host_port}}:5232"
+    volumes:
+      - "{{radicale_data_pathh}}/:/var/collections"

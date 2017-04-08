@@ -1,0 +1,42 @@
+---
+- name: Create radicale folder for configs
+  become: yes
+  file: path={{ item }} state=directory
+  with_items:
+    - "{{radicale_path}}"
+    - "{{radicale_data_path}}"
+
+- name: Copy radicale docker file and config to remote host
+  become: yes
+  template: src=tasks/install-radicale/templates//{{ item }} dest={{radicale_path}}/{{ item }}
+  with_items:
+    - config
+    - Dockerfile
+    - logging
+    - docker-compose.yml
+  register: radicale_config
+
+- name: Create new ssl certificate
+  become: yes
+  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ radicale_domain }}
+  when: enable_letsencrypt
+
+- name: Start docker Radicale
+  shell: docker-compose up -d chdir={{radicale_path}} creates=/tmp/started-radicale-docker-compose
+  when: not radicale_config.changed
+
+- name: Build and start docker Radicale
+  shell: docker-compose up -d --build chdir={{radicale_path}} creates=/tmp/started-radicale-docker-compose
+  when: radicale_config.changed
+
+- name: Create radicale nginx conf from template
+  become: yes
+  template: src=tasks/install-radicale/templates/radicale.conf dest=/etc/nginx/sites-available/radicale.conf
+  notify:
+    - restart nginx
+
+- name: Create link of nginx conf
+  become: yes
+  file: src=/etc/nginx/sites-available/radicale.conf dest=/etc/nginx/sites-enabled/radicale.conf state=link
+  notify:
+    - restart nginx

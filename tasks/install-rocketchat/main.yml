@@ -5,9 +5,10 @@
     dest: /etc/hosts
     line: "127.0.0.1  {{rocketchat_domain}} chat"
 
-- name: test cert
+- name: Create new ssl certificate
+  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ rocketchat_domain }}
   become: yes
-  shell: "openssl req -subj \"/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=chat.local.dev\" -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/letsencrypt/{{ rocketchat_domain }}/certificate.key -out /etc/letsencrypt/{{ rocketchat_domain }}/certificate.crt"
+  when: enable_letsencrypt
 
 - name: Create folder for Rocket.Chat docker volumes
   become: yes

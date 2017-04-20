@@ -10,4 +10,3 @@ hosts
 
 # phpstorm
 .idea
-/tasks/install-radicale/templates/rights

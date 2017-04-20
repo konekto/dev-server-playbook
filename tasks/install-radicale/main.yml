@@ -13,6 +13,7 @@
     - config
     - Dockerfile
     - logging
+    - rights
     - docker-compose.yml
   register: radicale_config
 

@@ -63,7 +63,7 @@
 
 # Authentication method
 # Value: None | htpasswd | IMAP | LDAP | PAM | courier | http | remote_user | custom
-#type = None
+type = LDAP
 
 # Custom authentication handler
 #custom_handler =
@@ -76,26 +76,26 @@
 #htpasswd_encryption = crypt
 
 # LDAP server URL, with protocol and port
-#ldap_url = ldap://localhost:389/
+ldap_url = {{radicale_ldap_url}}
 
 # LDAP base path
-#ldap_base = ou=users,dc=example,dc=com
+ldap_base = {{radicale_ldap_base}}
 
 # LDAP login attribute
-#ldap_attribute = uid
+ldap_attribute = {{radicale_ldap_attribute}}
 
 # LDAP filter string
 # placed as X in a query of the form (&(...)X)
 # example: (objectCategory=Person)(objectClass=User)(memberOf=cn=calenderusers,ou=users,dc=example,dc=org)
 # leave empty if no additional filter is needed
-#ldap_filter =
+ldap_filter = {{radicale_ldap_filter}}
 
 # LDAP dn for initial login, used if LDAP server does not allow anonymous searches
 # Leave empty if searches are anonymous
-#ldap_binddn =
+ldap_binddn = {{radicale_ldap_binddn}}
 
 # LDAP password for initial login, used with ldap_binddn
-#ldap_password =
+ldap_password = {{radicale_ldap_password}}
 
 # LDAP scope of the search
 #ldap_scope = OneLevel
@@ -129,13 +129,13 @@
 
 # Rights backend
 # Value: None | authenticated | owner_only | owner_write | from_file | custom
-#type = None
+type = {{radicale_rights_type}}
 
 # Custom rights handler
 #custom_handler =
 
 # File for rights management from_file
-#file = ~/.config/radicale/rights
+file = /etc/radicale/rights
 
 
 [storage]

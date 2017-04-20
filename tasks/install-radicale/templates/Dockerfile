@@ -1,5 +1,5 @@
 # {{ ansible_managed }}
-FROM alpine:latest
+FROM python:2.7
 
 MAINTAINER Radicale project "radicale@librelist.com"
 
@@ -7,25 +7,20 @@ ENV VERSION {{radicale_version}}
 #{{ radicale_version }}
 ENV TARBALL https://github.com/Kozea/Radicale/archive/${VERSION}.tar.gz
 
-RUN apk --update --update-cache upgrade \
-      && apk add \
-          python3 \
-          python3-dev \
-          build-base \
-          libffi-dev \
-          ca-certificates \
-          openssl \
-      && python3 -m ensurepip \
-      && pip3 install --upgrade pip \
-      && pip3 install passlib bcrypt
+RUN apt-get update -y
+RUN apt-get install -y libsasl2-dev python-dev libldap2-dev libssl-dev
+
+RUN pip install --upgrade pip \
+      && pip install passlib bcrypt python-ldap
 
 RUN wget ${TARBALL} \
     && tar xzf ${VERSION}.tar.gz \
-    && cd Radicale-${VERSION} && python3 setup.py install \
+    && cd Radicale-${VERSION} && python setup.py install \
     && mkdir -p /etc/radicale
 
 COPY config /etc/radicale/config
 COPY logging /etc/radicale/logging
+COPY rights /etc/radicale/rights
 
 EXPOSE 5232
 

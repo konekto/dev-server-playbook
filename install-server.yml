@@ -1,7 +1,7 @@
 # a complete playbook to install a new server
 ---
 - name: Provision a Ubuntu 16.04 LTS Server
-  hosts: vagrant
+  hosts: live
   tasks:
 
     # install requirments for the services...
@@ -14,15 +14,22 @@
 
 #    - include: tasks/install-letsencrypt/main.yml
 
-
 #    - include: tasks/install-nginx/main.yml
 
     # install services from here ...
+
+    - name: Stop Nginx for LetEncrypt cert generation
+      become: yes
+      service: name=nginx state=stopped
+      when: enable_letsencrypt
+
+#    - include: tasks/install-openldap-docker/main.yml
+
     - include: tasks/install-radicale/main.yml
 
 #    - include: tasks/install-rocketchat/main.yml
 
-#    - include: tasks/install-openldap-docker/main.yml
+#    - include: tasks/install-onlyoffice/main.yml
 
 #    - include: tasks/install-gitlab/main.yml
 
@@ -38,3 +45,4 @@
     - name: restart nginx
       become: yes
       service: name=nginx state=restarted
+

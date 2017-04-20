@@ -10,13 +10,17 @@ services:
       LDAP_ADMIN_PASSWORD: "{{openldap_admin_password}}"
       LDAP_CONFIG_PASSWORD: "{{openldap_config_password}}"
       LDAP_BASE_DN: "{{openldap_base_dn}}"
-      LDAP_READONLY_USER: true
+      LDAP_READONLY_USER: "true"
+      LDAP_TLS_VERIFY_CLIENT: "{{openldap_tls_verify_client}}"
       LDAP_READONLY_USER_USERNAME: "{{openldap_readonly_username}}"
       LDAP_READONLY_USER_PASSWORD: "{{openldap_readonly_password}}"
     volumes:
       - /var/openldap/database:/var/lib/ldap
       - /var/openldap/config:/etc/ldap/slapd.d
       - /container/service/slapd/assets/certs/
+    ports:
+      - 389:389
+      - 636:636
   openldap_admin:
     image: osixia/phpldapadmin
     container_name: {{ansible_hostname}}-openldap-admin

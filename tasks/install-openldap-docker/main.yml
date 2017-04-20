@@ -1,5 +1,4 @@
 ---
-#todo: nginx conf for admin ldap
 - name: Create folder for OpenLDAP configuration and database
   become: yes
   file: path={{ item }} state=directory owner=www-data group=www-data
@@ -10,7 +9,7 @@
 
 - name: Create new ssl certificate
   become: yes
-  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ radicale_domain }}
+  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ openldap_admin_hostname }}
   when: enable_letsencrypt
 
 - name: Create OpenLDAP admin nginx conf from template

@@ -16,16 +16,24 @@
 
 #    - include: tasks/install-nginx/main.yml
 
+     - include: tasks/prepare-backups/main.yml
+
     # install services from here ...
 
-    - name: Stop Nginx for LetEncrypt cert generation
-      become: yes
-      service: name=nginx state=stopped
-      when: enable_letsencrypt
+#    - name: Stop Nginx for LetEncrypt cert generation
+#      become: yes
+#      service: name=nginx state=stopped
+#      when: enable_letsencrypt
+#      notify:
+#        - start nginx
 
 #    - include: tasks/install-openldap-docker/main.yml
 
-    - include: tasks/install-radicale/main.yml
+#    - include: tasks/install-piwik/main.yml
+
+#    - include: tasks/install-hackmd/main.yml
+
+#    - include: tasks/install-radicale/main.yml
 
 #    - include: tasks/install-rocketchat/main.yml
 
@@ -33,7 +41,7 @@
 
 #    - include: tasks/install-gitlab/main.yml
 
-#    - include: tasks/install-redmine/main.yml
+     - include: tasks/install-redmine/main.yml
 
   # finishing installation tasks...
 
@@ -45,4 +53,8 @@
     - name: restart nginx
       become: yes
       service: name=nginx state=restarted
+
+    - name: start nginx
+      become: yes
+      service: name=nginx state=started
 

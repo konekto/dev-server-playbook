@@ -1,0 +1,18 @@
+version: '2'
+services:
+  db:
+    image: mysql
+    container_name: piwik-service
+    volumes:
+      - /var/piwik-service/database:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD={{piwik_database_root_password}}
+      - MYSQL_DATABASE=piwik
+  app:
+    image: piwik:fpm
+    links:
+      - db
+    volumes:
+    - /var/piwik-service/html:/var/www/html
+    ports:
+      - {{piwik_fpm_host_port}}:9000

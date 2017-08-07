@@ -1,0 +1,32 @@
+version: '2'
+services:
+  hackmdPostgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER={{HMD_POSTGRES_USER}}
+      - POSTGRES_PASSWORD={{HMD_POSTGRES_PASSWORD}}
+      - POSTGRES_DB=hackmd
+    volumes:
+      - /var/hackmd-service/database:/var/lib/postgresql/data
+  hackmd:
+    image: hackmdio/hackmd:latest
+    environment:
+      - HMD_ALLOW_EMAIL_REGISTER={{HMD_ALLOW_EMAIL_REGISTER}}
+      - HMD_DEFAULT_PERMISSION={{HMD_DEFAULT_PERMISSION}}
+      - DEBUG={{HMD_DEBUG}}
+      - POSTGRES_USER={{HMD_POSTGRES_USER}}
+      - POSTGRES_PASSWORD={{HMD_POSTGRES_PASSWORD}}
+      - HMD_ALLOW_ANONYMOUS={{HMD_ALLOW_ANONYMOUS}}
+      - HMD_EMAIL={{HMD_EMAIL}}
+      - HMD_LDAP_PROVIDERNAME={{HMD_LDAP_PROVIDERNAME}}
+      - HMD_LDAP_TOKENSECRET={{HMD_LDAP_TOKENSECRET}}
+      - HMD_LDAP_URL={{HMD_LDAP_URL}}
+      - HMD_LDAP_SEARCHBASE={{HMD_LDAP_SEARCHBASE}}
+      - HMD_LDAP_SEARCHATTRIBUTES={{HMD_LDAP_SEARCHATTRIBUTES}}
+      - HMD_LDAP_SEARCHFILTER={{HMD_LDAP_SEARCHFILTER}}
+      - HMD_LDAP_BINDDN={{HMD_LDAP_BINDDN}}
+      - HMD_LDAP_BINDCREDENTIALS={{HMD_LDAP_BINDCREDENTIALS}}
+    links:
+      - hackmdPostgres:hackmdPostgres
+    ports:
+      - "{{HMD_HOST_PORT}}:3000"

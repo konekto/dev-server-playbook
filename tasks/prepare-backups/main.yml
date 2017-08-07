@@ -1,0 +1,19 @@
+---
+
+  - name: Add backuper group
+    group:
+      name: "{{BACKUPER_GROUP_NAME}}"
+
+  - name: Add remote user to the backup group
+    user:
+      append: yes
+      groups: "{{BACKUPER_GROUP_NAME}}"
+      name: "{{ ansible_user }}"
+
+  - name: Create global backup folder
+    become: yes
+    file:
+      state: directory
+      group: "{{BACKUPER_GROUP_NAME}}"
+      mode: "0774"
+      path: "{{GLOBAL_BACKUP_FOLDER}}"

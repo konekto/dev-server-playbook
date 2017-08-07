@@ -1,0 +1,37 @@
+---
+- name: Create new ssl certificate
+  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ piwik_domain }}
+  become: yes
+  when: enable_letsencrypt
+
+- name: Create folder for Piwik Mysql docker volumes
+  become: yes
+  file:
+    state: directory
+    recurse: yes
+    dest: "{{ item }}"
+  with_items:
+    - /var/piwik-service/database
+    - /var/piwik-service/html
+    - /var/piwik-service/config
+
+- name: Create docker compose file from template
+  become: yes
+  template: src=tasks/install-piwik/templates/docker-compose.yml.j2 dest=/var/piwik-service/docker-compose.yml owner={{ansible_env.USER}}
+
+- name: Copy new nginx conf from template
+  become: yes
+  template: src=tasks/install-piwik/templates/nginx.conf.j2 dest=/etc/nginx/sites-available/piwik.conf
+  notify:
+    - restart nginx
+
+- name: Create link of nginx conf
+  become: yes
+  file: src=/etc/nginx/sites-available/piwik.conf dest=/etc/nginx/sites-enabled/piwik.conf state=link
+  notify:
+    - restart nginx
+
+- name: Start docker Piwik container
+  shell: docker-compose up -d chdir=/var/piwik-service creates=/tmp/started-piwik-docker-compose
+
+

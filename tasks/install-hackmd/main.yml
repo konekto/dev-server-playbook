@@ -1,0 +1,35 @@
+---
+- name: Create new ssl certificate
+  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ HMD_DOMAIN }}
+  become: yes
+  when: enable_letsencrypt
+
+- name: Create folder for hackmd postgres docker volumes
+  become: yes
+  file:
+    state: directory
+    recurse: yes
+    dest: "{{ item }}"
+  with_items:
+    - /var/hackmd-service/database
+
+- name: Create docker compose file from template
+  become: yes
+  template: src=tasks/install-hackmd/templates/docker-compose.yml.j2 dest=/var/hackmd-service/docker-compose.yml owner={{ansible_env.USER}}
+
+- name: Copy new nginx conf from template
+  become: yes
+  template: src=tasks/install-hackmd/templates/nginx.conf.j2 dest=/etc/nginx/sites-available/hackmd.conf
+  notify:
+    - restart nginx
+
+- name: Create link of nginx conf
+  become: yes
+  file: src=/etc/nginx/sites-available/hackmd.conf dest=/etc/nginx/sites-enabled/hackmd.conf state=link
+  notify:
+    - restart nginx
+
+- name: Start docker hackmd container
+  shell: docker-compose up -d chdir=/var/hackmd-service creates=/tmp/started-hackmd-docker-compose
+
+

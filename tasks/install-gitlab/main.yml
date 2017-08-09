@@ -53,3 +53,19 @@
     groups: gitlab-www
     name: www-data
   ignore_errors: yes
+
+- name : Create backup script from template file
+  become: yes
+  template:
+    src: tasks/install-gitlab/templates/backup.sh
+    dest: "/etc/gitlab/backup.sh"
+    mode: "0744"
+
+- name: Create crontab for backup script
+  become: yes
+  cron:
+    name: "gitlab-backup-script"
+    minute: "30"
+    hour:  "3"
+    job: "/etc/gitlab/backup.sh"
+    user: root

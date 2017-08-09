@@ -31,7 +31,7 @@
 
 #    - include: tasks/install-piwik/main.yml
 
-#    - include: tasks/install-hackmd/main.yml
+     - include: tasks/install-hackmd/main.yml
 
 #    - include: tasks/install-radicale/main.yml
 
@@ -39,9 +39,9 @@
 
 #    - include: tasks/install-onlyoffice/main.yml
 
-#    - include: tasks/install-gitlab/main.yml
+#     - include: tasks/install-gitlab/main.yml
 
-     - include: tasks/install-redmine/main.yml
+#     - include: tasks/install-redmine/main.yml
 
   # finishing installation tasks...
 

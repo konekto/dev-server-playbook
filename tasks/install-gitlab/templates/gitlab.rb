@@ -196,10 +196,10 @@ registry_nginx['ssl_certificate_key'] = '/etc/letsencrypt/live/{{gitlab_domain}}
 ## see https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md#backups
 
 # gitlab_rails['manage_backup_path'] = true
-# gitlab_rails['backup_path'] = "/var/opt/gitlab/backups"
+gitlab_rails['backup_path'] = '{{GLOBAL_BACKUP_FOLDER}}/gitlab'
 # gitlab_rails['backup_archive_permissions'] = 0644 # See: http://doc.gitlab.com/ce/raketasks/backup_restore.html#backup-archive-permissions
 # gitlab_rails['backup_pg_schema'] = 'public'
-# gitlab_rails['backup_keep_time'] = 604800
+gitlab_rails['backup_keep_time'] = 259200
 # gitlab_rails['backup_upload_connection'] = {
 #   'provider' => 'AWS',
 #   'region' => 'eu-west-1',

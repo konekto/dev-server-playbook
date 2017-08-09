@@ -1,37 +1,37 @@
 ---
-#- name: Create new ssl certificate
-#  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ redmine_domain }}
-#  become: yes
-#  when: enable_letsencrypt
-#
-#- name: Create folder for redmine files, theme and plugins on host
-#  become: yes
-#  file: path={{ item }} state=directory owner=www-data group=www-data
-#  with_items:
-#    - "/var/redmine-{{redmine_name}}"
-#    - "/var/redmine-{{redmine_name}}/themes"
-#    - "/var/redmine-{{redmine_name}}/files"
-#    - "/var/redmine-{{redmine_name}}/plugins"
-#    - "/var/redmine-{{redmine_name}}/database"
-#
-#- name: Create docker compose file from template
-#  become: yes
-#  template: src=tasks/install-redmine/templates/redmine-compose.yml dest=/var/redmine-{{redmine_name}}/docker-compose.yml owner={{ansible_env.USER}}
-#
-#- name: Start docker redmine and mysql server
-#  shell: docker-compose up -d chdir=/var/redmine-{{redmine_name}} creates=/tmp/started-redmine-docker-compose
-#
-#- name: Copy new nginx conf from template
-#  become: yes
-#  template: src=tasks/install-redmine/templates/redmine.conf dest=/etc/nginx/sites-available/redmine-konekto.conf
-#  notify:
-#    - restart nginx
-#
-#- name: Create link of nginx conf
-#  become: yes
-#  file: src=/etc/nginx/sites-available/redmine-konekto.conf dest=/etc/nginx/sites-enabled/redmine-konekto.conf state=link
-#  notify:
-#    - restart nginx
+- name: Create new ssl certificate
+  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ redmine_domain }}
+  become: yes
+  when: enable_letsencrypt
+
+- name: Create folder for redmine files, theme and plugins on host
+  become: yes
+  file: path={{ item }} state=directory owner=www-data group=www-data
+  with_items:
+    - "/var/redmine-{{redmine_name}}"
+    - "/var/redmine-{{redmine_name}}/themes"
+    - "/var/redmine-{{redmine_name}}/files"
+    - "/var/redmine-{{redmine_name}}/plugins"
+    - "/var/redmine-{{redmine_name}}/database"
+
+- name: Create docker compose file from template
+  become: yes
+  template: src=tasks/install-redmine/templates/redmine-compose.yml dest=/var/redmine-{{redmine_name}}/docker-compose.yml owner={{ansible_env.USER}}
+
+- name: Start docker redmine and mysql server
+  shell: docker-compose up -d chdir=/var/redmine-{{redmine_name}} creates=/tmp/started-redmine-docker-compose
+
+- name: Copy new nginx conf from template
+  become: yes
+  template: src=tasks/install-redmine/templates/redmine.conf dest=/etc/nginx/sites-available/redmine-konekto.conf
+  notify:
+    - restart nginx
+
+- name: Create link of nginx conf
+  become: yes
+  file: src=/etc/nginx/sites-available/redmine-konekto.conf dest=/etc/nginx/sites-enabled/redmine-konekto.conf state=link
+  notify:
+    - restart nginx
 
 - name : Create backup script from template file
   become: yes

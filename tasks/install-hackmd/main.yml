@@ -32,4 +32,25 @@
 - name: Start docker hackmd container
   shell: docker-compose up -d chdir=/var/hackmd-service creates=/tmp/started-hackmd-docker-compose
 
+- name: Create folder for hackmd backups
+  become: yes
+  file:
+    state: directory
+    dest: "{{GLOBAL_BACKUP_FOLDER}}/hackmd"
+    group: "{{BACKUPER_GROUP_NAME}}"
+    mode: "0775"
 
+- name : Create backup script from template file
+  become: yes
+  template:
+    src: tasks/install-hackmd/templates/backup.sh
+    dest: "/var/hackmd-service/backup.sh"
+    mode: "0755"
+
+- name: Create crontab for hackmd backup script
+  cron:
+    name: "hackmd-backup-script"
+    minute: "15"
+    hour:  "3"
+    job: "/var/hackmd-service/backup.sh"
+    user: "{{ansible_user}}"

@@ -1,41 +1,65 @@
 ---
-- name: Create folder for OnlyOffice
-  become: yes
-  file: path=/var/onlyoffice/{{ item }} state=directory recurse=yes
-  with_items:
-    - "mysql"
-    - "data"
-    - "log"
-    - "document-data"
-    - "document-server/data"
-    - "document-server/fonts"
-    - "document-server/log"
+#- name: Create folder for OnlyOffice
+#  become: yes
+#  file: path=/var/onlyoffice/{{ item }} state=directory recurse=yes
+#  with_items:
+#    - "mysql"
+#    - "data"
+#    - "log"
+#    - "document-data"
+#    - "document-server/data"
+#    - "document-server/fonts"
+#    - "document-server/log"
+#
+#- name: Create new ssl certificate for CommunityServer
+#  become: yes
+#  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ onlyoffice_cs_domain }}
+#  when: enable_letsencrypt
+#
+#- name: Create new ssl certificate for DocumentServer
+#  become: yes
+#  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ onlyoffice_ds_domain }}
+#  when: enable_letsencrypt
+#
+#- name: Create Onlyoffice nginx conf from template
+#  become: yes
+#  template: src=tasks/install-onlyoffice/templates/onlyoffice.conf dest=/etc/nginx/sites-available/onlyoffice.conf
+#  notify:
+#    - restart nginx
+#
+#- name: Create link of nginx conf
+#  become: yes
+#  file: src=/etc/nginx/sites-available/onlyoffice.conf dest=/etc/nginx/sites-enabled/onlyoffice.conf state=link
+#  notify:
+#    - restart nginx
+#
+#- name: Create docker compose file from template
+#  become: yes
+#  template: src=tasks/install-onlyoffice/templates/docker-compose.yml dest=/var/onlyoffice/docker-compose.yml owner={{ansible_env.USER}}
+#
+#- name: Start docker OnlyOffice with DocumentServer
+#  shell: docker-compose up -d chdir=/var/onlyoffice creates=/tmp/started-onlyoffice-docker-compose
 
-- name: Create new ssl certificate for CommunityServer
+- name : Create backup script from template file
   become: yes
-  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ onlyoffice_cs_domain }}
-  when: enable_letsencrypt
+  template:
+    src: tasks/install-onlyoffice/templates/backup.sh
+    dest: "/var/onlyoffice/backup.sh"
+    mode: "0744"
+    owner: "{{ansible_user}}"
 
-- name: Create new ssl certificate for DocumentServer
+- name: Create crontab for backup script
   become: yes
-  shell: letsencrypt certonly --agree-tos --email {{ letsencrypt_email }} --keep-until-expiring -n --standalone --standalone-supported-challenges tls-sni-01 -d {{ onlyoffice_ds_domain }}
-  when: enable_letsencrypt
+  cron:
+    name: "onlyoffice-backup-script"
+    minute: "15"
+    hour:  "3"
+    job: "/var/onlyoffice/backup.sh"
+    user: "root"
 
-- name: Create Onlyoffice nginx conf from template
-  become: yes
-  template: src=tasks/install-onlyoffice/templates/onlyoffice.conf dest=/etc/nginx/sites-available/onlyoffice.conf
-  notify:
-    - restart nginx
-
-- name: Create link of nginx conf
-  become: yes
-  file: src=/etc/nginx/sites-available/onlyoffice.conf dest=/etc/nginx/sites-enabled/onlyoffice.conf state=link
-  notify:
-    - restart nginx
-
-- name: Create docker compose file from template
-  become: yes
-  template: src=tasks/install-onlyoffice/templates/docker-compose.yml dest=/var/onlyoffice/docker-compose.yml owner={{ansible_env.USER}}
-
-- name: Start docker OnlyOffice with DocumentServer
-  shell: docker-compose up -d chdir=/var/onlyoffice creates=/tmp/started-onlyoffice-docker-compose
+- name: Create onlyoffice backup folder
+  file:
+    state: directory
+    owner: "{{ansible_user}}"
+    mode: "0774"
+    path: "{{GLOBAL_BACKUP_FOLDER}}/onlyoffice"

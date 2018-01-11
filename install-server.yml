@@ -16,7 +16,7 @@
 
 #    - include: tasks/install-nginx/main.yml
 
-     - include: tasks/prepare-backups/main.yml
+#     - include: tasks/prepare-backups/main.yml
 
     # install services from here ...
 
@@ -31,13 +31,13 @@
 
 #    - include: tasks/install-piwik/main.yml
 
-     - include: tasks/install-hackmd/main.yml
+#     - include: tasks/install-hackmd/main.yml
 
 #    - include: tasks/install-radicale/main.yml
 
 #    - include: tasks/install-rocketchat/main.yml
 
-#    - include: tasks/install-onlyoffice/main.yml
+    - include: tasks/install-onlyoffice/main.yml
 
 #     - include: tasks/install-gitlab/main.yml
 

@@ -8,18 +8,22 @@ services:
     depends_on:
      - onlyoffice-document-server
     environment:
-     - DOCUMENT_SERVER_PORT_80_TCP_ADDR={{onlyoffice_ds_domain}}
+     - DOCUMENT_SERVER_PORT_80_TCP_ADDR=onlyoffice-document-server
+     - MYSQL_SERVER_PORT=3306
     networks:
      - onlyoffice
     ports:
      - '{{onlyoffice_cs_http_host_port}}:80'
      - '{{onlyoffice_chat_host_port}}:5222'
+     - '{{onlyoffice_cs_https_host_port}}:443'
+     - '9865-9866:9865-9866'
+     - '9871:9871'
+     - '9888:9888'
     restart: always
     volumes:
      - /var/onlyoffice/mysql:/var/lib/mysql
      - /var/onlyoffice/data:/var/www/onlyoffice/Data
      - /var/onlyoffice/log:/var/log/onlyoffice
-     - /var/onlyoffice/document-data:/var/www/onlyoffice/DocumentServerData
   onlyoffice-document-server:
     stdin_open: true
     tty: true
@@ -32,6 +36,7 @@ services:
       - '80'
     ports:
       - '{{onlyoffice_ds_http_host_port}}:80'
+      - '{{onlyoffice_ds_https_host_port}}:443'
     volumes:
        - /var/onlyoffice/document-server/data:/var/www/onlyoffice/Data
        - /var/onlyoffice/document-server/fonts:/usr/share/fonts/truetype/custom

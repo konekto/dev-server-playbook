@@ -195,7 +195,7 @@ registry_nginx['ssl_certificate_key'] = '/etc/letsencrypt/live/{{gitlab_domain}}
 ## For setting up backups
 ## see https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md#backups
 
-# gitlab_rails['manage_backup_path'] = true
+gitlab_rails['manage_backup_path'] = false
 gitlab_rails['backup_path'] = '{{GLOBAL_BACKUP_FOLDER}}/gitlab'
 # gitlab_rails['backup_archive_permissions'] = 0644 # See: http://doc.gitlab.com/ce/raketasks/backup_restore.html#backup-archive-permissions
 # gitlab_rails['backup_pg_schema'] = 'public'

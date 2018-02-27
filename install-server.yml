@@ -6,6 +6,7 @@
 
     # install requirments for the services...
 
+    - include: tasks/prepare-server/main.yml
 #    - include: tasks/harding-server/main.yml
 
 #    - include: tasks/ubuntu/main.yml
@@ -20,12 +21,12 @@
 
     # install services from here ...
 
-#    - name: Stop Nginx for LetEncrypt cert generation
-#      become: yes
-#      service: name=nginx state=stopped
-#      when: enable_letsencrypt
-#      notify:
-#        - start nginx
+    - name: Stop Nginx for LetEncrypt cert generation
+      become: yes
+      service: name=nginx state=stopped
+      when: enable_letsencrypt
+      notify:
+        - start nginx
 
 #    - include: tasks/install-openldap-docker/main.yml
 
@@ -37,11 +38,12 @@
 
 #    - include: tasks/install-rocketchat/main.yml
 
-    - include: tasks/install-onlyoffice/main.yml
+#    - include: tasks/install-onlyoffice/main.yml
 
 #     - include: tasks/install-gitlab/main.yml
 
 #     - include: tasks/install-redmine/main.yml
+    - include: tasks/install-nextcloud/main.yml
 
   # finishing installation tasks...
 

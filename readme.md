@@ -1,11 +1,18 @@
 # An Ansible Development Server Playbook
 
+**This branch will remove hackmd, onlyoffice and radicale as services on later stages. We use
+Nextcloud integrated with OnlyOffice document server as replacement for those services**
+
+**This branch will introduce a global services folder.
+
+
 This Ansible playbook and its tasks provision a Ubuntu 16.04 LTS server as development
 server for programmers. Following services will be installed:
 
 * Gitlab http://gitlab.com
 * Redmine http://www.redmine.org
-* Sandstorm http://sandstorm.io 
+* Nextcloud http://nextcloud.org
+* Rocketchat http://rocket.chat
 
 Besides those services the playbook installs some background services and tools:
  
@@ -13,10 +20,7 @@ Besides those services the playbook installs some background services and tools:
 * Let's Encrypt http://letsencrypt.org
 
 All services will use the HTTPS protocol. All certificates will be automatically created
-be the *letsencrpyt* tool. **Except** the Sandstorm app, that is because Sandstorm needs
-a wildcard ssl certificate but Let's Encrypt does not support it yet. Therefore you
-need to obtain your custom certificate and save it at  */etc/sandstorm-ssl*. If you don't place
-the ssl certificates into this directory the nginx server won't start. 
+be the *letsencrpyt* tool. 
  
 You can disable Let's encrypt completely with the *enable_letsencrypt* variable. 
 That is very useful for Vagrant testing.

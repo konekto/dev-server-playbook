@@ -1,0 +1,29 @@
+# The default path for this kind of files is ~/.config/radicale/rights
+# This can be changed in the configuration file
+#
+# This file gives independant examples to help users write their own
+# configuration files. Using these examples together in the same configuration
+# file is meaningless.
+#
+
+# Allow authenticated user to read all collections
+
+# Give write access to owners
+[owner-write]
+user: .+
+collection: ^%(login)s/.*$
+permission: w
+
+[allow-everyone-rw-konekto]
+user: .+
+collection: ^konekto/.+$
+permission: rw
+
+[allow-everyone-read]
+user: .+
+collection: .*
+permission: r
+
+
+
+

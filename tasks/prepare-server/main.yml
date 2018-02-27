@@ -1,0 +1,7 @@
+---
+
+- name: Create services folder
+  file:
+    path: "{{services_folder}}"
+    state: directory
+  become: Yes
